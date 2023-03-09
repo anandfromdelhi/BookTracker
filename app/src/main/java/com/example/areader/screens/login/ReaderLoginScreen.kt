@@ -25,9 +25,13 @@ import com.example.areader.R
 import com.example.areader.components.EmailInput
 import com.example.areader.components.PasswordInput
 import com.example.areader.components.ReaderLogo
+import com.example.areader.navigation.ReaderScreens
 
 @Composable
-fun ReaderLoginScreen(navController: NavController) {
+fun ReaderLoginScreen(
+    navController: NavController,
+    viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
 
     val showLoginForm = rememberSaveable {
         mutableStateOf(true)
@@ -42,7 +46,9 @@ fun ReaderLoginScreen(navController: NavController) {
             ReaderLogo()
             if (showLoginForm.value) {
                 UserForm(loading = false, isCreateAccount = false) { email, password ->
-                    Log.d("form", "ReaderLoginScreen:  $email @password")
+                    viewModel.signInWithEmailAndPassword(email, password) {
+                        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+                    }
                 }
             } else {
                 UserForm(loading = false, isCreateAccount = true) { email, password ->

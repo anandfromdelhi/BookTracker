@@ -1,6 +1,10 @@
 package com.example.areader.screens.home
 
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
-class ReaderHomeScreen(navController: NavController) {
+@Composable
+fun ReaderHomeScreen(navController: NavController) {
+    Text(text = "Home Screen")
 }
