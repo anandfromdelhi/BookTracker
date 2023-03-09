@@ -1,5 +1,6 @@
 package com.example.areader.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -36,6 +37,9 @@ fun ReaderLoginScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             ReaderLogo()
+            UserForm(loading = false, isCreateAccount = false) { email, password ->
+                Log.d("form", "ReaderLoginScreen:  $email @password")
+            }
 
         }
 
@@ -45,9 +49,9 @@ fun ReaderLoginScreen(navController: NavController) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserForm(
-    loading:Boolean = false,
-    isCreateAccount:Boolean = false,
-    onDone:(String,String)-> Unit 
+    loading: Boolean = false,
+    isCreateAccount: Boolean = false,
+    onDone: (String, String) -> Unit
 ) {
     val email = rememberSaveable {
         mutableStateOf("")
@@ -74,7 +78,7 @@ fun UserForm(
     ) {
         EmailInput(
             emailState = email,
-            enabled = true,
+            enabled = !loading,
             onAction = KeyboardActions {
                 passwordFocusRequest.requestFocus()
             }
@@ -83,7 +87,7 @@ fun UserForm(
             modifier = Modifier.focusRequester(passwordFocusRequest),
             passwordState = password,
             labelId = "Password",
-            enabled = true,
+            enabled = !loading,
             passwordVisbility = passwordVisbility,
             onAction = KeyboardActions {
                 if (!valid) return@KeyboardActions
