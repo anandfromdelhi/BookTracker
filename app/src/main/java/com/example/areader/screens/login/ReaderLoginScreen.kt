@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -27,19 +28,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.areader.components.EmailInput
+import com.example.areader.components.PasswordInput
 import com.example.areader.components.ReaderLogo
 
 @Composable
 fun ReaderLoginScreen(navController: NavController) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ReaderLogo()
             UserForm(loading = false, isCreateAccount = false) { email, password ->
                 Log.d("form", "ReaderLoginScreen:  $email @password")
             }
+
 
         }
 
@@ -94,52 +96,35 @@ fun UserForm(
                 onDone(email.value.trim(), password.value.trim())
             }
         )
+        SubmitButton(
+            textId = if (isCreateAccount) "Create Account" else "Login",
+            loading = loading,
+            validInputs = valid
+        ) {
+            onDone(email.value.trim(), password.value.trim())
+        }
 
     }
 
 }
 
 @Composable
-fun PasswordInput(
-    modifier: Modifier,
-    passwordState: MutableState<String>,
-    labelId: String,
-    enabled: Boolean,
-    passwordVisbility: MutableState<Boolean>,
-    imeAction: ImeAction = ImeAction.Done,
-    onAction: KeyboardActions = KeyboardActions.Default
+fun SubmitButton(
+    textId: String,
+    loading: Boolean,
+    validInputs: Boolean,
+    onClick: () -> Unit
 ) {
-    val visualTransformation =
-        if (passwordVisbility.value) VisualTransformation.None else PasswordVisualTransformation()
-    OutlinedTextField(
-        value = passwordState.value,
-        onValueChange = {
-            passwordState.value = it
-        },
-        label = { Text(text = labelId) },
-        singleLine = true,
-        textStyle = TextStyle(
-            fontSize = 18.sp,
-            color = MaterialTheme.colors.onBackground
-        ),
-        modifier = modifier
+    Button(
+        onClick = onClick,
+        modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth(),
-        enabled = enabled,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = imeAction
-        ),
-        visualTransformation = visualTransformation,
-        trailingIcon = { PasswordVisiblity(passwordVisbility) }
-    )
+        enabled = !loading && validInputs,
+        shape = CircleShape
+    ) {
+        if (loading) CircularProgressIndicator(modifier = Modifier.size(25.dp))
+        else Text(text = textId, modifier = Modifier.padding(5.dp))
 
-}
-
-@Composable
-fun PasswordVisiblity(passwordVisbility: MutableState<Boolean>) {
-    val visible = passwordVisbility.value
-    IconButton(onClick = { passwordVisbility.value = !visible }) {
-        Icons.Default.Close
     }
 }
