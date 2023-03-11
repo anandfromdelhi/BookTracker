@@ -42,12 +42,14 @@ fun ReaderSplashScreen(
         ))
         delay(1000L)
 
-        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()) {
-            navController.navigate(ReaderScreens.LoginScreen.name)
-        } else {
-            navController.navigate(ReaderScreens.ReaderHomeScreen.name)
-        }
+//        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()) {
+//            navController.navigate(ReaderScreens.LoginScreen.name)
+//        } else {
+//            navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+//        }
+        navController.navigate(ReaderScreens.LoginScreen.name)
     }
+
     Surface(
         modifier = Modifier
             .padding(15.dp)
